@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState } from "react";
 
 const SimpleInput = (props) => {
   const [name, setName] = useState("");
@@ -7,6 +7,12 @@ const SimpleInput = (props) => {
 
   const nameChangeHandler = (event) => {
     setName(event.target.value);
+
+    if (!nameIsValid) {
+      if (event.target.value.trim() !== "") {
+        setNameIsValid(true);
+      }
+    }
   };
 
   const nameBlurHandler = () => {
@@ -14,9 +20,7 @@ const SimpleInput = (props) => {
 
     if (name.trim() === "") {
       setNameIsValid(false);
-      return;
     }
-    setNameIsValid(true);
   };
 
   const formSubmitHandler = (event) => {

@@ -1,52 +1,39 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 
 const SimpleInput = (props) => {
   const [name, setName] = useState("");
-  const [nameIsValid, setNameIsValid] = useState(false);
   const [nameIsTouched, setNameIsTouched] = useState(false);
+  const nameIsValid = name.trim() !== "";
+  const nameIsInvalid = !nameIsValid && nameIsTouched;
 
-  const nameChangeHandler = (event) => {
+  const nameChangeHandler = useCallback((event) => {
     setName(event.target.value);
+  }, []);
 
-    if (!nameIsValid) {
-      if (event.target.value.trim() !== "") {
-        setNameIsValid(true);
-      }
-    }
-  };
-
-  const nameBlurHandler = () => {
+  const nameBlurHandler = useCallback(() => {
     setNameIsTouched(true);
+  }, []);
 
-    if (name.trim() === "") {
-      setNameIsValid(false);
-    }
-  };
-
-  const formSubmitHandler = (event) => {
+  const submitHandler = (event) => {
     event.preventDefault();
 
-    setNameIsTouched(true);
-
-    if (name.trim() === "") {
-      setNameIsValid(false);
+    if (!nameIsValid) {
+      setNameIsTouched(true);
       return;
     }
 
     console.log("submission handler, name:", name);
 
-    setNameIsValid(true);
     setName("");
+    setNameIsTouched(false);
   };
 
-  const nameInputIsInvalid = !nameIsValid && nameIsTouched;
-
-  const nameInputClasses = nameInputIsInvalid
+  const nameInputClasses = nameIsInvalid
     ? "form-control invalid"
     : "form-control";
 
   return (
-    <form onSubmit={formSubmitHandler}>
+    <form onSubmit={submitHandler}>
       <div className={nameInputClasses}>
         <label htmlFor="name">Your Name</label>
         <input
@@ -54,10 +41,9 @@ const SimpleInput = (props) => {
           id="name"
           onChange={nameChangeHandler}
           onBlur={nameBlurHandler}
+          value={name}
         />
-        {nameInputIsInvalid && (
-          <p className="error-text">Name must not be empty</p>
-        )}
+        {nameIsInvalid && <p className="error-text">Name must not be empty</p>}
       </div>
       <div className="form-actions">
         <button>Submit</button>
@@ -67,3 +53,37 @@ const SimpleInput = (props) => {
 };
 
 export default SimpleInput;
+
+// const nameChangeHandler = (event) => {
+//   setName(event.target.value);
+
+//   // if (!nameIsValid) {
+//   //   if (event.target.value.trim() !== "") {
+//   //     setNameIsValid(true);
+//   //   }
+//   // }
+// };
+
+// const nameBlurHandler = () => {
+//   setNameIsTouched(true);
+
+//   // if (name.trim() === "") {
+//   //   setNameIsValid(false);
+//   // }
+// };
+
+// // const formSubmitHandler = (event) => {
+// //   event.preventDefault();
+
+// //   setNameIsTouched(true);
+
+// //   if (name.trim() === "") {
+// //     setNameIsValid(false);
+// //     return;
+// //   }
+
+// //   console.log("submission handler, name:", name);
+
+// //   setNameIsValid(true);
+// //   setName("");
+// // };

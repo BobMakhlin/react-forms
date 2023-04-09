@@ -1,10 +1,11 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 const SimpleInput = (props) => {
   const [name, setName] = useState("");
   const [nameIsTouched, setNameIsTouched] = useState(false);
   const nameIsValid = name.trim() !== "";
   const nameIsInvalid = !nameIsValid && nameIsTouched;
+  const formIsValid = nameIsValid;
 
   const nameChangeHandler = useCallback((event) => {
     setName(event.target.value);
@@ -46,7 +47,7 @@ const SimpleInput = (props) => {
         {nameIsInvalid && <p className="error-text">Name must not be empty</p>}
       </div>
       <div className="form-actions">
-        <button>Submit</button>
+        <button disabled={!formIsValid}>Submit</button>
       </div>
     </form>
   );

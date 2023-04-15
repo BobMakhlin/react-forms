@@ -1,10 +1,8 @@
 import { useCallback, useState } from "react";
 
-const useFormControl = (validatorFn) => {
+const useFormControl = ({ validationType, validatorFn }) => {
   const [value, setValue] = useState("");
   const [isTouched, setIsTouched] = useState(false);
-  const isValid = validatorFn(value);
-  const hasError = !isValid && isTouched;
 
   const changeHandler = useCallback((event) => {
     setValue(event.target.value);
@@ -19,6 +17,27 @@ const useFormControl = (validatorFn) => {
   const markAsTouched = useCallback(() => {
     setIsTouched(true);
   }, []);
+
+  const validate = useCallback(
+    (value) => {
+      if (!validationType) {
+        return validatorFn(value);
+      }
+
+      switch (validationType) {
+        case "required":
+          return value !== "";
+        case "email":
+          return value.includes("@");
+        default:
+          return true;
+      }
+    },
+    [validationType, validatorFn]
+  );
+
+  const isValid = validate(value);
+  const hasError = !isValid && isTouched;
 
   return {
     value,

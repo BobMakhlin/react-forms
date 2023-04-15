@@ -51,12 +51,21 @@ const BasicForm = () => {
     resetEmail();
   };
 
+  const firstNameInputClasses = firstNameHasError
+    ? "form-control invalid"
+    : "form-control";
+  const lastNameInputClass = lastNameHasError
+    ? "form-control invalid"
+    : "form-control";
+  const emailInputClass = emailHasError
+    ? "form-control invalid"
+    : "form-control";
   const formIsInvalid = firstNameHasError || lastNameHasError || emailHasError;
 
   return (
     <form onSubmit={submitHandler}>
       <div className="control-group">
-        <div className="form-control">
+        <div className={firstNameInputClasses}>
           <label htmlFor="name">First Name</label>
           <input
             value={firstName}
@@ -69,7 +78,7 @@ const BasicForm = () => {
             <p className="error-text">First name should not be empty.</p>
           )}
         </div>
-        <div className="form-control">
+        <div className={lastNameInputClass}>
           <label htmlFor="name">Last Name</label>
           <input
             value={lastName}
@@ -83,7 +92,7 @@ const BasicForm = () => {
           )}
         </div>
       </div>
-      <div className="form-control">
+      <div className={emailInputClass}>
         <label htmlFor="name">E-Mail Address</label>
         <input
           value={email}
